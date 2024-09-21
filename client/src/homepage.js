@@ -40,25 +40,28 @@ export default function Homepage() {
   };
 
   const checkGrammar = async (textToCheck) => {
-    console.log("Sending request to backend to check grammar...");
+    // Capitalize the first letter of the text
+    const formattedText = textToCheck.charAt(0).toUpperCase() + textToCheck.slice(1);
+    console.log("Sending request to backend to check grammar with formatted text:", formattedText);
     try {
-      const response = await axios.post("https://spoke-person.vercel.app/check_grammar", {
-        text: textToCheck,
-      });
+        const response = await axios.post("https://spoke-person.vercel.app/check_grammar", {
+            text: formattedText,
+        });
 
-      console.log("Response from backend:", response.data);
+        console.log("Response from backend:", response.data);
 
-      if (response.data.corrections.length === 0) {
-        setCorrections([{ mistake: "No mistakes found", correction: "Your sentence is correct!" }]);
-      } else {
-        setCorrections(response.data.corrections);
-      }
-      setCorrectedText(response.data.correctedText);
-      speakText(response.data.correctedText);
+        if (response.data.corrections.length === 0) {
+            setCorrections([{ mistake: "No mistakes found", correction: "Your sentence is correct!" }]);
+        } else {
+            setCorrections(response.data.corrections);
+        }
+        setCorrectedText(response.data.correctedText);
+        speakText(response.data.correctedText);
     } catch (error) {
-      console.error("Error checking grammar:", error);
+        console.error("Error checking grammar:", error);
     }
-  };
+};
+
 
   const speakText = (text) => {
     console.log("Speaking corrected text:", text);
