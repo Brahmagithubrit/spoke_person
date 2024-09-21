@@ -121,6 +121,10 @@
 
 
 
+
+
+
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import LottieAnimation from './LottieAnimation';
@@ -135,8 +139,8 @@ export default function Homepage() {
     const [isContinuousSpeaking, setIsContinuousSpeaking] = useState(false);
     const [hasGreeted, setHasGreeted] = useState(false);
     const [nameDisplay, setNameDisplay] = useState("");
-    const [isRegistered, setIsRegistered] = useState(false);
-    const name = "Brahma";
+    const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+    const name = "Brrahma";
 
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -174,7 +178,7 @@ export default function Homepage() {
         let index = 0;
         setNameDisplay("");
         const typingEffect = setInterval(() => {
-            if (index < name.length) {
+            if (index < name.length-1) {
                 setNameDisplay((prev) => prev + name[index]);
                 index++;
             } else {
@@ -219,6 +223,12 @@ export default function Homepage() {
         console.log("Speaking:", text);
         const utterance = new SpeechSynthesisUtterance(text);
         window.speechSynthesis.speak(utterance);
+
+        if (isContinuousSpeaking) {
+            utterance.onend = () => {
+                speakText(text);
+            };
+        }
     };
 
     const toggleContinuousSpeaking = () => {
@@ -233,53 +243,62 @@ export default function Homepage() {
             }
         }
     };
+    const toggleRegistration = () => {
+      setIsRegistrationOpen(!isRegistrationOpen);
+  };
 
-    const handleRegister = () => {
-        setIsRegistered(true); // Set registration status
-    };
+  return (
+      <div style={{ padding: '10px', textAlign: 'center' }}>
+          <h1>{nameDisplay}</h1>
 
-    return (
-        <div style={{ padding: '10px', textAlign: 'center' }}>
-            {isRegistered ? ( // Check if the user is registered
-                <>
-                    <h1>{nameDisplay}</h1>
-                    <button onClick={startListening}>Speak</button>
-                    <button onClick={toggleContinuousSpeaking}>
-                        {isContinuousSpeaking ? "Stop Speaking" : "Continuous Speak"}
-                    </button>
-                    <p>Captured Text: {text}</p>
-                    <input
-                        type="text"
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        placeholder="Type your sentence here"
-                    />
-                    <button onClick={() => checkGrammar(text)}>Check Grammar</button>
+          {/* Registration Circle Icon */}
+          <div className="registration-icon" onClick={toggleRegistration}>
+              <div className="circle-icon">+</div>
+          </div>
 
-                    {corrections.length > 0 && (
-                        <div>
-                            <h3>Corrections:</h3>
-                            <ul>
-                                {corrections.map((correction, index) => (
-                                    <li key={index}>
-                                        Mistake: {correction.mistake} --- Suggestion: {correction.correction}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
+          {isRegistrationOpen && (
+              <div className="registration-popup">
+                  <Registration onRegister={() => {
+                      setIsRegistrationOpen(false);
+                      // Add any additional actions after registration
+                  }} />
+              </div>
+          )}
 
-                    {correctedText && (
-                        <div>
-                            <h3>Corrected Sentence:</h3>
-                            <p>{correctedText}</p>
-                        </div>
-                    )}
-                    <LottieAnimation isListening={isListening} />
-                </>
-            ) : (
-                <Registration onRegister={handleRegister} /> // Render Registration component
-            )}
-        </div>
-    );
+          <button onClick={startListening}>Speak</button>
+          <button onClick={toggleContinuousSpeaking}>
+              {isContinuousSpeaking ? "Stop Speaking" : "Continuous Speak"}
+          </button>
+          <p>Captured Text: {text}</p>
+          <input
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Type your sentence here"
+          />
+          <button onClick={() => checkGrammar(text)}>Check Grammar</button>
+
+          {corrections.length > 0 && (
+              <div>
+                  <h3>Corrections:</h3>
+                  <ul>
+                      {corrections.map((correction, index) => (
+                          <li key={index}>
+                              Mistake: {correction.mistake} --- Suggestion: {correction.correction}
+                          </li>
+                      ))}
+                  </ul>
+              </div>
+          )}
+
+          {correctedText && (
+              <div>
+                  <h3>Corrected Sentence:</h3>
+                  <p>{correctedText}</p>
+              </div>
+          )}
+          <p>Please register for premium features </p>
+          <LottieAnimation isListening={isListening} />
+      </div>
+  );
 }

@@ -8,7 +8,6 @@ const Registration = ({ onRegister }) => {
     const [message, setMessage] = useState("");
 
     const handleRegister = async () => {
-        // Check if the name is "root" and email matches the expected format
         if (name !== "root" || email !== `${name}root@gmail.com`) {
             setMessage("Name must be 'root' and email must be in the format: name + 'root@gmail.com'");
             return;
@@ -26,7 +25,7 @@ const Registration = ({ onRegister }) => {
 
     return (
         <div className="registration-container">
-            <h2>Register</h2>
+            <h2>Register for Unlock Premium Features</h2>
             <input
                 type="text"
                 value={name}
@@ -44,7 +43,7 @@ const Registration = ({ onRegister }) => {
             <button onClick={handleRegister} className="register-button">Register</button>
             <p>{message}</p>
             <p className="input-description">
-                Please enter your name as "root" and your email as "nameroot@gmail.com".
+                Please enter your name as "root" and your email as "root@gmail.com".
             </p>
         </div>
     );
