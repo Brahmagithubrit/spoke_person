@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "../client/package.json",
+      "use": "@vercel/react"
+    },
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/check_grammar",
+      "dest": "index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "../client/$1"
+    }
+  ],
+  "env": {
+    "PORT": "5000"
+  }
+}
