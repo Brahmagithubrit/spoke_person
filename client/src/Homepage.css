@@ -88,6 +88,12 @@ body.lottie-active {
       width: 90%;
   }
 }
+.input-description {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555; /* Adjust color as needed */
+  text-align: center; /* Center-align the text */
+}
 
 
 h1 {

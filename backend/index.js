@@ -118,7 +118,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/api/register", (req, res) => {
-  const { email, name } = req.body; // Destructure name from request body
+  const { email, username } = req.body; // Now destructuring username
   const filePath = path.join(process.cwd(), 'users.json');
 
   let users = [];
@@ -131,10 +131,11 @@ app.post("/api/register", (req, res) => {
       return res.status(400).json({ message: "User already registered!" });
   }
 
-  users.push({ email, name }); // Store both email and name
+  users.push({ email, username }); // Store username and email
   fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
   return res.status(201).json({ message: "Registration successful!" });
 });
+
 
 
 
